@@ -1,0 +1,19 @@
+# dependencias
+node_modules/
+
+# build
+dist/
+
+# base de datos (datos locales, no versionar)
+server/*.db
+server/*.db-shm
+server/*.db-wal
+
+# logs y temporales
+*.log
+npm-debug.log*
+
+# entorno
+.env
+.env.local
+.DS_Store
