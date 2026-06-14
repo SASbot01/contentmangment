@@ -4,6 +4,8 @@
 import express from 'express'
 import path from 'path'
 import fs from 'fs'
+import http from 'http'
+import https from 'https'
 import { fileURLToPath } from 'url'
 import { Creators, Content, Campaigns } from './db.js'
 import { authenticate, registerUser, listUsers, deleteUser, createSession, destroySession, requireAuth, requireAdmin, uid } from './auth.js'
@@ -97,5 +99,21 @@ if (fs.existsSync(distDir)) {
 }
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n  🐺 ContentForge corriendo en http://0.0.0.0:${PORT}\n`)
+  console.log(`\n  🐺 ContentForge corriendo en http://0.0.0.0:${PORT}`)
 })
+
+// ── HTTPS para Cloudflare (Full strict) usando el Origin Certificate ──
+// Si existen los certificados, levanta HTTPS en :443 y redirige 80 → 443.
+const CERT = path.join(__dirname, 'certs', 'origin.pem')
+const KEY = path.join(__dirname, 'certs', 'origin.key')
+if (fs.existsSync(CERT) && fs.existsSync(KEY)) {
+  https.createServer({ cert: fs.readFileSync(CERT), key: fs.readFileSync(KEY) }, app)
+    .listen(443, '0.0.0.0', () => console.log('  🔒 HTTPS (origin cert) en https://0.0.0.0:443\n'))
+
+  http.createServer((req, res) => {
+    res.writeHead(301, { Location: 'https://' + (req.headers.host || '') + req.url })
+    res.end()
+  }).listen(80, '0.0.0.0', () => console.log('  ↪ Redirección 80 → 443 activa'))
+} else {
+  console.log('  ℹ Sin certificados aún (server/certs/origin.pem + origin.key) → HTTPS desactivado\n')
+}

@@ -17,3 +17,6 @@ npm-debug.log*
 .env
 .env.local
 .DS_Store
+
+# certificados (clave privada — NUNCA versionar)
+server/certs/
