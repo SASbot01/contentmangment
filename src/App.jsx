@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react'
 import {
   LayoutDashboard, KanbanSquare, CalendarDays, Megaphone, Users, ShieldCheck,
-  Plus, Search, RotateCcw, LogOut, Loader2,
+  Plus, Search, LogOut, Loader2, Pencil,
 } from 'lucide-react'
 import { useStore } from './store'
 import { Avatar } from './components/ui'
-import { ContentForm, CampaignForm } from './components/forms'
+import { ContentForm, CampaignForm, CreatorForm } from './components/forms'
 import Dashboard from './views/Dashboard'
 import ContentBoard from './views/ContentBoard'
 import Calendar from './views/Calendar'
@@ -30,6 +30,7 @@ export default function App() {
 
   const [contentModal, setContentModal] = useState({ open: false, initial: null })
   const [campaignModal, setCampaignModal] = useState({ open: false, initial: null })
+  const [creatorModal, setCreatorModal] = useState({ open: false, initial: null })
 
   // datos filtrados por creador + búsqueda
   const content = useMemo(() => db.content.filter((c) =>
@@ -44,6 +45,7 @@ export default function App() {
 
   const openContent = (initial) => setContentModal({ open: true, initial: initial || { creatorId: creatorFilter !== 'all' ? creatorFilter : db.creators[0]?.id } })
   const openCampaign = (initial) => setCampaignModal({ open: true, initial: initial || { creatorId: creatorFilter !== 'all' ? creatorFilter : db.creators[0]?.id } })
+  const openCreator = (initial) => setCreatorModal({ open: true, initial: initial || null })
 
   const isAdmin = store.user?.role === 'admin'
   const NAV = isAdmin ? [...BASE_NAV, ADMIN_NAV] : BASE_NAV
@@ -93,19 +95,26 @@ export default function App() {
 
         {/* lista de marcas */}
         <div className="mt-4 pt-4 border-t border-ink-700">
-          <p className="px-3 text-[11px] uppercase tracking-wide text-slate-500 font-bold mb-2 flex items-center gap-1.5"><Users size={12} /> Marcas</p>
+          <div className="flex items-center justify-between px-3 mb-2">
+            <p className="text-[11px] uppercase tracking-wide text-slate-500 font-bold flex items-center gap-1.5"><Users size={12} /> Marcas</p>
+            <button onClick={() => openCreator()} title="Nueva marca" className="text-slate-400 hover:text-white p-0.5 rounded hover:bg-ink-700"><Plus size={15} /></button>
+          </div>
           <button onClick={() => setCreatorFilter('all')} className={`w-full text-left px-3 py-2 rounded-lg text-sm ${creatorFilter === 'all' ? 'bg-ink-700 text-white' : 'text-slate-400 hover:bg-ink-700'}`}>Todas las marcas</button>
           {db.creators.map((c) => (
-            <button key={c.id} onClick={() => setCreatorFilter(c.id)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm ${creatorFilter === c.id ? 'bg-ink-700 text-white' : 'text-slate-400 hover:bg-ink-700'}`}>
-              <Avatar creator={c} size={24} />
-              <span className="truncate">{c.brand}</span>
-            </button>
+            <div key={c.id} className={`group w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm ${creatorFilter === c.id ? 'bg-ink-700 text-white' : 'text-slate-400 hover:bg-ink-700'}`}>
+              <button onClick={() => setCreatorFilter(c.id)} className="flex items-center gap-2.5 min-w-0 flex-1 text-left">
+                <Avatar creator={c} size={24} />
+                <span className="truncate">{c.brand}</span>
+              </button>
+              <button onClick={() => openCreator(c)} title="Editar marca" className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-white p-0.5"><Pencil size={13} /></button>
+            </div>
           ))}
+          {db.creators.length === 0 && (
+            <button onClick={() => openCreator()} className="w-full mt-1 px-3 py-2 rounded-lg text-xs text-brand-300 hover:bg-ink-700 text-left flex items-center gap-1.5">
+              <Plus size={13} /> Crea tu primera marca
+            </button>
+          )}
         </div>
-
-        <button onClick={store.resetDemo} className="mt-4 flex items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:text-slate-300">
-          <RotateCcw size={13} /> Restaurar datos demo
-        </button>
 
         {/* usuario + logout */}
         <div className="mt-2 pt-3 border-t border-ink-700 flex items-center gap-2.5 px-1">
@@ -189,6 +198,12 @@ export default function App() {
         onClose={() => setCampaignModal({ open: false, initial: null })}
         onSave={store.upsertCampaign}
         onDelete={store.deleteCampaign}
+      />
+      <CreatorForm
+        open={creatorModal.open}
+        initial={creatorModal.initial}
+        onClose={() => setCreatorModal({ open: false, initial: null })}
+        onSave={store.upsertCreator}
       />
     </div>
   )

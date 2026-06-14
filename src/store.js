@@ -77,8 +77,9 @@ export function useStore() {
     try { await api.deleteCampaign(id) } finally { refresh() }
   }, [refresh])
 
-  const resetDemo = useCallback(async () => {
-    await api.reset()
+  // ── Marcas / creadores ──
+  const upsertCreator = useCallback(async (item) => {
+    await api.saveCreator(item)
     await refresh()
   }, [refresh])
 
@@ -87,6 +88,6 @@ export function useStore() {
     login, register, logout,
     upsertContent, moveContent, deleteContent,
     upsertCampaign, deleteCampaign,
-    resetDemo, refresh,
+    upsertCreator, refresh,
   }
 }

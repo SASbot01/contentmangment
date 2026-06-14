@@ -4,6 +4,64 @@ import { CONTENT_TYPES, PLATFORMS, CATEGORIES, STAGES, CAMPAIGN_STATUS, OBJECTIV
 
 const todayStr = () => new Date().toISOString().slice(0, 10)
 
+const BRAND_COLORS = ['#7916ff', '#ec4899', '#0ea5e9', '#10b981', '#f97316', '#f59e0b', '#ef4444', '#6366f1', '#14b8a6', '#8b5cf6']
+const initialsOf = (s) => (s || '?').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
+
+// ─── Formulario de marca / creador ───
+export function CreatorForm({ open, onClose, onSave, initial }) {
+  const blank = { brand: '', name: '', niche: '', color: BRAND_COLORS[0] }
+  const [f, setF] = useState({ ...blank, ...initial })
+  const set = (k) => (e) => setF((p) => ({ ...p, [k]: e.target.value }))
+
+  React.useEffect(() => { setF({ ...blank, ...initial }) }, [initial, open]) // eslint-disable-line
+
+  const save = () => {
+    if (!f.brand.trim()) return
+    onSave({ ...f, avatar: initialsOf(f.brand) })
+    onClose()
+  }
+
+  return (
+    <Modal
+      open={open} onClose={onClose}
+      title={initial?.id ? 'Editar marca' : 'Nueva marca'}
+      footer={
+        <>
+          <button onClick={onClose} className="btn-ghost">Cancelar</button>
+          <button onClick={save} className="btn-primary">Guardar</button>
+        </>
+      }
+    >
+      <div className="flex items-center gap-3 mb-5">
+        <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0" style={{ backgroundColor: f.color }}>
+          {initialsOf(f.brand)}
+        </span>
+        <p className="text-sm text-slate-400">El avatar se genera con las iniciales de la marca.</p>
+      </div>
+      <div className="space-y-4">
+        <Field label="Nombre de la marca">
+          <input className="input" value={f.brand} onChange={set('brand')} placeholder="Ej: Mindset Millonario" autoFocus />
+        </Field>
+        <Field label="Responsable / Creador">
+          <input className="input" value={f.name} onChange={set('name')} placeholder="Nombre del infoproductor" />
+        </Field>
+        <Field label="Nicho">
+          <input className="input" value={f.niche} onChange={set('niche')} placeholder="Ej: Mentalidad & finanzas" />
+        </Field>
+        <Field label="Color">
+          <div className="flex flex-wrap gap-2">
+            {BRAND_COLORS.map((c) => (
+              <button key={c} type="button" onClick={() => setF((p) => ({ ...p, color: c }))}
+                className={`w-8 h-8 rounded-full transition ${f.color === c ? 'ring-2 ring-offset-2 ring-slate-400' : ''}`}
+                style={{ backgroundColor: c }} />
+            ))}
+          </div>
+        </Field>
+      </div>
+    </Modal>
+  )
+}
+
 // ─── Formulario de pieza de contenido ───
 export function ContentForm({ open, onClose, onSave, onDelete, initial, creators }) {
   const blank = {

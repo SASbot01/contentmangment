@@ -9,7 +9,7 @@ import https from 'https'
 import { fileURLToPath } from 'url'
 import { Creators, Content, Campaigns } from './db.js'
 import { authenticate, registerUser, listUsers, deleteUser, createSession, destroySession, requireAuth, requireAdmin, uid } from './auth.js'
-import { seedIfEmpty, resetDemoData } from './seed.js'
+import { seedIfEmpty } from './seed.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const PORT = process.env.PORT || 5180
@@ -85,9 +85,6 @@ app.delete('/api/campaigns/:id', (req, res) => { Campaigns.delete(req.params.id)
 // ── Creadores ──
 app.post('/api/creators', (req, res) => res.status(201).json(Creators.insert({ ...req.body, id: uid() })))
 app.put('/api/creators/:id', (req, res) => res.json(Creators.upsert({ ...req.body, id: req.params.id })))
-
-// ── Reset demo ──
-app.post('/api/reset', (req, res) => { resetDemoData(); res.json({ ok: true }) })
 
 // ── Servir la app compilada (producción) ──
 const distDir = path.join(__dirname, '..', 'dist')

@@ -44,5 +44,5 @@ export const api = {
   saveCampaign: (c) => (c.id ? req('PUT', '/campaigns/' + c.id, c) : req('POST', '/campaigns', c)),
   deleteCampaign: (id) => req('DELETE', '/campaigns/' + id),
 
-  reset: () => req('POST', '/reset'),
+  saveCreator: (c) => (c.id ? req('PUT', '/creators/' + c.id, c) : req('POST', '/creators', c)),
 }
