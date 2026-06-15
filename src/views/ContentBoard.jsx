@@ -115,7 +115,8 @@ export default function ContentBoard({ content, creators, onMove, onOpen, onNew 
           {filtered.length === 0 ? (
             <EmptyState icon={List} title="Sin contenido" hint="Crea tu primera pieza para empezar a organizar la producción." />
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[640px]">
               <thead>
                 <tr className="text-left text-xs uppercase tracking-wide text-slate-400 border-b border-slate-100 bg-slate-50/60">
                   <th className="py-3 px-4 font-semibold">Pieza</th>
@@ -144,6 +145,7 @@ export default function ContentBoard({ content, creators, onMove, onOpen, onNew 
                 })}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       )}

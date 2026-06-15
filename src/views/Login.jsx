@@ -31,20 +31,20 @@ export default function Login({ onLogin, onRegister }) {
   }
 
   return (
-    <div className="min-h-full flex items-center justify-center p-6 bg-gradient-to-br from-ink-900 via-ink-800 to-brand-900">
+    <div className="min-h-full flex items-center justify-center p-6 pt-safe pb-safe bg-gradient-to-br from-brand-50 via-white to-brand-100">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-brand-600 flex items-center justify-center mb-3 shadow-lg shadow-brand-600/30">
-            <svg viewBox="0 0 32 32" className="w-8 h-8"><path d="M9 10l3 4-2 8 6-4 6 4-2-8 3-4-5 1-2-4-2 4-5-1z" fill="#fff"/></svg>
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center mb-3 shadow-glow">
+            <svg viewBox="0 0 32 32" className="w-9 h-9"><path d="M9 10l3 4-2 8 6-4 6 4-2-8 3-4-5 1-2-4-2 4-5-1z" fill="#fff"/></svg>
           </div>
-          <h1 className="text-2xl font-extrabold text-white">ContentForge</h1>
-          <p className="text-sm text-slate-400">{isRegister ? 'Crea tu cuenta para empezar' : 'CRM de Contenido · accede a tu cuenta'}</p>
+          <h1 className="text-2xl font-extrabold text-slate-800">ContentForge</h1>
+          <p className="text-sm text-slate-500">{isRegister ? 'Crea tu cuenta para empezar' : 'CRM de Contenido · accede a tu cuenta'}</p>
         </div>
 
         {/* selector login / registro */}
-        <div className="flex bg-ink-800 rounded-xl p-1 mb-4">
-          <button onClick={() => { setMode('login'); setError('') }} className={`flex-1 py-2 rounded-lg text-sm font-semibold transition ${!isRegister ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-white'}`}>Entrar</button>
-          <button onClick={() => { setMode('register'); setError('') }} className={`flex-1 py-2 rounded-lg text-sm font-semibold transition ${isRegister ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-white'}`}>Registrarse</button>
+        <div className="flex bg-white border border-slate-200 rounded-xl p-1 mb-4 shadow-soft">
+          <button onClick={() => { setMode('login'); setError('') }} className={`flex-1 py-2 rounded-lg text-sm font-semibold transition ${!isRegister ? 'bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-glow' : 'text-slate-500 hover:text-brand-700'}`}>Entrar</button>
+          <button onClick={() => { setMode('register'); setError('') }} className={`flex-1 py-2 rounded-lg text-sm font-semibold transition ${isRegister ? 'bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-glow' : 'text-slate-500 hover:text-brand-700'}`}>Registrarse</button>
         </div>
 
         <form onSubmit={submit} className="card p-6 space-y-4">
@@ -76,7 +76,7 @@ export default function Login({ onLogin, onRegister }) {
             {loading ? 'Procesando…' : (isRegister ? 'Crear cuenta' : 'Entrar')}
           </button>
 
-          <p className="text-center text-xs text-slate-400">
+          <p className="text-center text-xs text-slate-500">
             {isRegister ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}{' '}
             <button type="button" onClick={switchMode} className="font-semibold text-brand-600 hover:underline">
               {isRegister ? 'Inicia sesión' : 'Regístrate aquí'}
@@ -84,7 +84,7 @@ export default function Login({ onLogin, onRegister }) {
           </p>
         </form>
 
-        <p className="text-center text-xs text-slate-500 mt-4">© ContentForge · BlackWolf</p>
+        <p className="text-center text-xs text-slate-400 mt-4">© ContentForge · BlackWolf</p>
       </div>
     </div>
   )

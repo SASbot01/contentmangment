@@ -38,7 +38,7 @@ export default function Dashboard({ content, campaigns, creators, onOpenContent 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Kpi icon={Film} label="Piezas en producción" value={enProduccion} sub={`${content.length} totales`} accent="#7916ff" />
+        <Kpi icon={Film} label="Piezas en producción" value={enProduccion} sub={`${content.length} totales`} accent="#2563eb" />
         <Kpi icon={Megaphone} label="Campañas activas" value={activas.length} sub={`${campaigns.length} totales`} accent="#f97316" />
         <Kpi icon={Wallet} label="Inversión en ads" value={`${spent.toLocaleString('es-ES')}€`} sub="acumulado" accent="#0ea5e9" />
         <Kpi icon={TrendingUp} label="Leads generados" value={leads.toLocaleString('es-ES')} sub="por campañas" accent="#10b981" />

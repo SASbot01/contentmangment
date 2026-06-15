@@ -46,19 +46,28 @@ export function Modal({ open, onClose, title, children, footer, wide }) {
 
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink-900/50 backdrop-blur-sm p-4 sm:p-8">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center overflow-y-auto bg-ink-900/40 backdrop-blur-sm sm:p-8 animate-fadeIn"
+    >
       <div
-        className={`card w-full ${wide ? 'max-w-3xl' : 'max-w-xl'} my-4 animate-[fadeIn_.15s_ease]`}
+        className={`bg-white w-full ${wide ? 'sm:max-w-3xl' : 'sm:max-w-xl'} shadow-2xl flex flex-col max-h-[92svh] sm:max-h-[88vh]
+          rounded-t-3xl sm:rounded-2xl border border-slate-200/70
+          animate-sheetUp sm:animate-scaleIn`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+        {/* tirador (móvil) */}
+        <div className="sm:hidden flex justify-center pt-2.5 pb-1 shrink-0">
+          <span className="w-10 h-1.5 rounded-full bg-slate-300" />
+        </div>
+        <div className="flex items-center justify-between px-5 sm:px-6 py-3 sm:py-4 border-b border-slate-100 shrink-0">
           <h3 className="text-lg font-bold text-slate-800">{title}</h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 rounded-lg p-1 hover:bg-slate-100">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 rounded-lg p-1.5 hover:bg-slate-100 active:scale-90 transition">
             <X size={20} />
           </button>
         </div>
-        <div className="px-6 py-5">{children}</div>
-        {footer && <div className="flex justify-end gap-2 px-6 py-4 border-t border-slate-100 bg-slate-50/60 rounded-b-2xl">{footer}</div>}
+        <div className="px-5 sm:px-6 py-5 overflow-y-auto">{children}</div>
+        {footer && <div className="flex justify-end gap-2 px-5 sm:px-6 py-3.5 sm:py-4 border-t border-slate-100 bg-slate-50/60 rounded-b-3xl sm:rounded-b-2xl shrink-0 pb-safe sm:pb-4">{footer}</div>}
       </div>
     </div>
   )

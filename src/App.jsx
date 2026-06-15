@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import {
   LayoutDashboard, KanbanSquare, CalendarDays, Megaphone, Users, ShieldCheck,
-  Plus, Search, LogOut, Loader2, Pencil,
+  Plus, Search, LogOut, Loader2, Pencil, X,
 } from 'lucide-react'
 import { useStore } from './store'
 import { Avatar } from './components/ui'
@@ -14,12 +14,16 @@ import UsersView from './views/Users'
 import Login from './views/Login'
 
 const BASE_NAV = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'content',   label: 'Contenido', icon: KanbanSquare },
-  { id: 'calendar',  label: 'Calendario', icon: CalendarDays },
-  { id: 'campaigns', label: 'Campañas Ads', icon: Megaphone },
+  { id: 'dashboard', label: 'Dashboard', short: 'Inicio', icon: LayoutDashboard },
+  { id: 'content',   label: 'Contenido', short: 'Contenido', icon: KanbanSquare },
+  { id: 'calendar',  label: 'Calendario', short: 'Agenda', icon: CalendarDays },
+  { id: 'campaigns', label: 'Campañas Ads', short: 'Ads', icon: Megaphone },
 ]
-const ADMIN_NAV = { id: 'users', label: 'Perfiles', icon: ShieldCheck }
+const ADMIN_NAV = { id: 'users', label: 'Perfiles', short: 'Perfiles', icon: ShieldCheck }
+
+const Logo = ({ className = 'w-5 h-5' }) => (
+  <svg viewBox="0 0 32 32" className={className}><path d="M9 10l3 4-2 8 6-4 6 4-2-8 3-4-5 1-2-4-2 4-5-1z" fill="#fff" /></svg>
+)
 
 export default function App() {
   const store = useStore()
@@ -27,6 +31,7 @@ export default function App() {
   const [nav, setNav] = useState('dashboard')
   const [creatorFilter, setCreatorFilter] = useState('all')
   const [search, setSearch] = useState('')
+  const [mobileSearch, setMobileSearch] = useState(false)
 
   const [contentModal, setContentModal] = useState({ open: false, initial: null })
   const [campaignModal, setCampaignModal] = useState({ open: false, initial: null })
@@ -55,8 +60,8 @@ export default function App() {
   // ── Guardia de autenticación ──
   if (!store.ready) {
     return (
-      <div className="h-full flex items-center justify-center text-slate-400">
-        <Loader2 className="animate-spin" />
+      <div className="h-full flex items-center justify-center text-brand-500">
+        <Loader2 className="animate-spin" size={28} />
       </div>
     )
   }
@@ -66,15 +71,15 @@ export default function App() {
 
   return (
     <div className="flex h-full">
-      {/* ───── Sidebar ───── */}
-      <aside className="w-64 shrink-0 bg-ink-900 text-slate-300 flex flex-col p-4 hidden md:flex">
+      {/* ───── Sidebar (escritorio) ───── */}
+      <aside className="w-64 shrink-0 bg-white border-r border-slate-200/80 flex-col p-4 hidden md:flex">
         <div className="flex items-center gap-2.5 px-2 py-2 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center">
-            <svg viewBox="0 0 32 32" className="w-5 h-5"><path d="M9 10l3 4-2 8 6-4 6 4-2-8 3-4-5 1-2-4-2 4-5-1z" fill="#fff"/></svg>
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-glow">
+            <Logo />
           </div>
           <div>
-            <p className="font-extrabold text-white leading-none">ContentForge</p>
-            <p className="text-[11px] text-slate-500 mt-0.5">CRM de Contenido</p>
+            <p className="font-extrabold text-slate-800 leading-none">ContentForge</p>
+            <p className="text-[11px] text-slate-400 mt-0.5">CRM de Contenido</p>
           </div>
         </div>
 
@@ -85,7 +90,7 @@ export default function App() {
             return (
               <button
                 key={n.id} onClick={() => setNav(n.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${active ? 'bg-brand-600 text-white' : 'text-slate-400 hover:bg-ink-700 hover:text-white'}`}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${active ? 'bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-glow' : 'text-slate-500 hover:bg-brand-50 hover:text-brand-700'}`}
               >
                 <Icon size={18} /> {n.label}
               </button>
@@ -94,38 +99,38 @@ export default function App() {
         </nav>
 
         {/* lista de marcas */}
-        <div className="mt-4 pt-4 border-t border-ink-700">
+        <div className="mt-4 pt-4 border-t border-slate-100">
           <div className="flex items-center justify-between px-3 mb-2">
-            <p className="text-[11px] uppercase tracking-wide text-slate-500 font-bold flex items-center gap-1.5"><Users size={12} /> Marcas</p>
-            <button onClick={() => openCreator()} title="Nueva marca" className="text-slate-400 hover:text-white p-0.5 rounded hover:bg-ink-700"><Plus size={15} /></button>
+            <p className="text-[11px] uppercase tracking-wide text-slate-400 font-bold flex items-center gap-1.5"><Users size={12} /> Marcas</p>
+            <button onClick={() => openCreator()} title="Nueva marca" className="text-slate-400 hover:text-brand-600 p-0.5 rounded hover:bg-brand-50"><Plus size={15} /></button>
           </div>
-          <button onClick={() => setCreatorFilter('all')} className={`w-full text-left px-3 py-2 rounded-lg text-sm ${creatorFilter === 'all' ? 'bg-ink-700 text-white' : 'text-slate-400 hover:bg-ink-700'}`}>Todas las marcas</button>
+          <button onClick={() => setCreatorFilter('all')} className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${creatorFilter === 'all' ? 'bg-brand-50 text-brand-700' : 'text-slate-500 hover:bg-slate-50'}`}>Todas las marcas</button>
           {db.creators.map((c) => (
-            <div key={c.id} className={`group w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm ${creatorFilter === c.id ? 'bg-ink-700 text-white' : 'text-slate-400 hover:bg-ink-700'}`}>
+            <div key={c.id} className={`group w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${creatorFilter === c.id ? 'bg-brand-50 text-brand-700' : 'text-slate-500 hover:bg-slate-50'}`}>
               <button onClick={() => setCreatorFilter(c.id)} className="flex items-center gap-2.5 min-w-0 flex-1 text-left">
                 <Avatar creator={c} size={24} />
-                <span className="truncate">{c.brand}</span>
+                <span className="truncate font-medium">{c.brand}</span>
               </button>
-              <button onClick={() => openCreator(c)} title="Editar marca" className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-white p-0.5"><Pencil size={13} /></button>
+              <button onClick={() => openCreator(c)} title="Editar marca" className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-brand-600 p-0.5"><Pencil size={13} /></button>
             </div>
           ))}
           {db.creators.length === 0 && (
-            <button onClick={() => openCreator()} className="w-full mt-1 px-3 py-2 rounded-lg text-xs text-brand-300 hover:bg-ink-700 text-left flex items-center gap-1.5">
+            <button onClick={() => openCreator()} className="w-full mt-1 px-3 py-2 rounded-lg text-xs text-brand-600 hover:bg-brand-50 text-left flex items-center gap-1.5 font-medium">
               <Plus size={13} /> Crea tu primera marca
             </button>
           )}
         </div>
 
         {/* usuario + logout */}
-        <div className="mt-2 pt-3 border-t border-ink-700 flex items-center gap-2.5 px-1">
-          <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+        <div className="mt-2 pt-3 border-t border-slate-100 flex items-center gap-2.5 px-1">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white text-xs font-bold shrink-0">
             {(store.user.name || store.user.username).slice(0, 2).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-white truncate">{store.user.name || store.user.username}</p>
-            <p className="text-[11px] text-slate-500 truncate">{store.user.role === 'admin' ? 'Administrador' : 'Miembro'}</p>
+            <p className="text-sm font-semibold text-slate-700 truncate">{store.user.name || store.user.username}</p>
+            <p className="text-[11px] text-slate-400 truncate">{store.user.role === 'admin' ? 'Administrador' : 'Miembro'}</p>
           </div>
-          <button onClick={store.logout} title="Cerrar sesión" className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-ink-700">
+          <button onClick={store.logout} title="Cerrar sesión" className="text-slate-400 hover:text-brand-600 p-1.5 rounded-lg hover:bg-brand-50">
             <LogOut size={16} />
           </button>
         </div>
@@ -134,10 +139,15 @@ export default function App() {
       {/* ───── Main ───── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* header */}
-        <header className="bg-white border-b border-slate-200 px-5 sm:px-8 py-4 flex items-center gap-4 shrink-0">
-          <div>
-            <h1 className="text-xl font-extrabold text-slate-800">{title}</h1>
-            <p className="text-xs text-slate-400">{activeCreator ? activeCreator.brand + ' · ' + activeCreator.niche : 'Todas las marcas'}</p>
+        <header className="bg-white/85 backdrop-blur-xl border-b border-slate-200/80 px-4 sm:px-8 py-3 sm:py-4 flex items-center gap-3 sm:gap-4 shrink-0 pt-safe">
+          {/* logo solo en móvil */}
+          <div className="md:hidden w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-glow shrink-0">
+            <Logo />
+          </div>
+
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-extrabold text-slate-800 leading-tight truncate">{title}</h1>
+            <p className="text-xs text-slate-400 truncate">{activeCreator ? activeCreator.brand + ' · ' + activeCreator.niche : 'Todas las marcas'}</p>
           </div>
 
           <div className="relative ml-auto hidden sm:block">
@@ -148,32 +158,46 @@ export default function App() {
             />
           </div>
 
+          {/* buscar (móvil) */}
+          <button onClick={() => setMobileSearch((v) => !v)} className="sm:hidden ml-auto w-10 h-10 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-500 active:scale-95 transition">
+            <Search size={18} />
+          </button>
+
           {nav !== 'users' && (
-            <button onClick={() => (nav === 'campaigns' ? openCampaign() : openContent())} className="btn-primary">
+            <button onClick={() => (nav === 'campaigns' ? openCampaign() : openContent())} className="btn-primary !px-3 sm:!px-4">
               <Plus size={18} /> <span className="hidden sm:inline">{nav === 'campaigns' ? 'Campaña' : 'Contenido'}</span>
             </button>
           )}
         </header>
 
-        {/* mobile creator selector */}
-        <div className="md:hidden px-5 py-2 bg-white border-b border-slate-200">
-          <select className="input py-2" value={creatorFilter} onChange={(e) => setCreatorFilter(e.target.value)}>
+        {/* búsqueda desplegable (móvil) */}
+        {mobileSearch && (
+          <div className="sm:hidden px-4 py-2.5 bg-white border-b border-slate-200/80 animate-fadeIn">
+            <div className="relative">
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                autoFocus className="input pl-9 pr-9 py-2.5" placeholder="Buscar…"
+                value={search} onChange={(e) => setSearch(e.target.value)}
+              />
+              {search && (
+                <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 p-1">
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* selector de marca (móvil) */}
+        <div className="md:hidden px-4 py-2.5 bg-white border-b border-slate-200/80">
+          <select className="input py-2.5" value={creatorFilter} onChange={(e) => setCreatorFilter(e.target.value)}>
             <option value="all">Todas las marcas</option>
             {db.creators.map((c) => <option key={c.id} value={c.id}>{c.brand}</option>)}
           </select>
         </div>
 
-        {/* mobile nav */}
-        <div className="md:hidden flex border-b border-slate-200 bg-white overflow-x-auto">
-          {NAV.map((n) => (
-            <button key={n.id} onClick={() => setNav(n.id)} className={`flex-1 px-3 py-2.5 text-xs font-semibold whitespace-nowrap ${nav === n.id ? 'text-brand-600 border-b-2 border-brand-600' : 'text-slate-400'}`}>
-              {n.label}
-            </button>
-          ))}
-        </div>
-
         {/* content area */}
-        <main className="flex-1 overflow-y-auto p-5 sm:p-8">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-8 pb-28 md:pb-8">
           {nav === 'dashboard' && <Dashboard content={content} campaigns={campaigns} creators={db.creators} onOpenContent={openContent} />}
           {nav === 'content' && <ContentBoard content={content} creators={db.creators} onMove={store.moveContent} onOpen={openContent} onNew={openContent} />}
           {nav === 'calendar' && <Calendar content={content} creators={db.creators} onOpen={openContent} onNew={openContent} />}
@@ -181,6 +205,28 @@ export default function App() {
           {nav === 'users' && isAdmin && <UsersView currentUser={store.user} />}
         </main>
       </div>
+
+      {/* ───── Barra de pestañas inferior (móvil, estilo iOS) ───── */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-xl border-t border-slate-200/80 pb-safe">
+        <div className="flex items-stretch justify-around px-1">
+          {NAV.map((n) => {
+            const Icon = n.icon
+            const active = nav === n.id
+            return (
+              <button
+                key={n.id}
+                onClick={() => setNav(n.id)}
+                className={`flex-1 flex flex-col items-center gap-0.5 py-2 pt-2.5 transition-colors active:scale-95 ${active ? 'text-brand-600' : 'text-slate-400'}`}
+              >
+                <span className={`flex items-center justify-center w-11 h-7 rounded-full transition-colors ${active ? 'bg-brand-100' : ''}`}>
+                  <Icon size={20} strokeWidth={active ? 2.4 : 2} />
+                </span>
+                <span className="text-[10px] font-semibold tracking-tight">{n.short}</span>
+              </button>
+            )
+          })}
+        </div>
+      </nav>
 
       {/* ───── Modales ───── */}
       <ContentForm

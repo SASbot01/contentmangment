@@ -63,7 +63,7 @@ const day = (offset) => {
 
 // ── Infoproductores / creadores (clientes) ──
 export const SEED_CREATORS = [
-  { id: 'c1', name: 'Laura Méndez',  brand: 'Mindset Millonario', niche: 'Mentalidad & finanzas', avatar: 'LM', color: '#7916ff' },
+  { id: 'c1', name: 'Laura Méndez',  brand: 'Mindset Millonario', niche: 'Mentalidad & finanzas', avatar: 'LM', color: '#2563eb' },
   { id: 'c2', name: 'Dani Ferrer',   brand: 'FitCode',           niche: 'Fitness & hábitos',     avatar: 'DF', color: '#ec4899' },
   { id: 'c3', name: 'Sofía Reyes',   brand: 'Closer Academy',    niche: 'Ventas high-ticket',    avatar: 'SR', color: '#0ea5e9' },
 ]

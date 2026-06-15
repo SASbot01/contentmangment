@@ -4,7 +4,7 @@ import { CONTENT_TYPES, PLATFORMS, CATEGORIES, STAGES, CAMPAIGN_STATUS, OBJECTIV
 
 const todayStr = () => new Date().toISOString().slice(0, 10)
 
-const BRAND_COLORS = ['#7916ff', '#ec4899', '#0ea5e9', '#10b981', '#f97316', '#f59e0b', '#ef4444', '#6366f1', '#14b8a6', '#8b5cf6']
+const BRAND_COLORS = ['#2563eb', '#0ea5e9', '#6366f1', '#8b5cf6', '#14b8a6', '#10b981', '#f59e0b', '#f97316', '#ec4899', '#ef4444']
 const initialsOf = (s) => (s || '?').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
 
 // ─── Formulario de marca / creador ───

@@ -30,26 +30,26 @@ export default function Calendar({ content, creators, onOpen, onNew }) {
   const go = (n) => setCursor(new Date(year, month + n, 1))
 
   return (
-    <div className="card p-5">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
+    <div className="card p-3 sm:p-5">
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <button onClick={() => go(-1)} className="btn-ghost p-2"><ChevronLeft size={18} /></button>
-          <h3 className="font-bold text-slate-800 capitalize w-44 text-center">{monthLabel}</h3>
+          <h3 className="font-bold text-slate-800 capitalize w-28 sm:w-44 text-center text-sm sm:text-base truncate">{monthLabel}</h3>
           <button onClick={() => go(1)} className="btn-ghost p-2"><ChevronRight size={18} /></button>
-          <button onClick={() => setCursor(() => { const d = new Date(); d.setDate(1); return d })} className="btn-ghost text-sm ml-1">Hoy</button>
+          <button onClick={() => setCursor(() => { const d = new Date(); d.setDate(1); return d })} className="btn-ghost text-sm ml-1 hidden sm:inline-flex">Hoy</button>
         </div>
-        <button onClick={onNew} className="btn-primary"><Plus size={18} /> Nueva pieza</button>
+        <button onClick={onNew} className="btn-primary !px-3 sm:!px-4"><Plus size={18} /> <span className="hidden sm:inline">Nueva pieza</span></button>
       </div>
 
       <div className="grid grid-cols-7 gap-px bg-slate-100 rounded-xl overflow-hidden border border-slate-100">
         {WEEKDAYS.map((w) => (
-          <div key={w} className="bg-slate-50 py-2 text-center text-xs font-bold uppercase tracking-wide text-slate-400">{w}</div>
+          <div key={w} className="bg-slate-50 py-2 text-center text-[10px] sm:text-xs font-bold uppercase tracking-wide text-slate-400">{w}</div>
         ))}
         {cells.map((cell, i) => (
-          <div key={i} className={`bg-white min-h-[110px] p-1.5 ${!cell ? 'bg-slate-50/40' : ''}`}>
+          <div key={i} className={`bg-white min-h-[68px] sm:min-h-[110px] p-1 sm:p-1.5 ${!cell ? 'bg-slate-50/40' : ''}`}>
             {cell && (
               <>
-                <div className={`text-xs font-semibold mb-1 w-6 h-6 flex items-center justify-center rounded-full ${cell.dateStr === todayStr ? 'bg-brand-600 text-white' : 'text-slate-400'}`}>
+                <div className={`text-[11px] sm:text-xs font-semibold mb-1 w-6 h-6 flex items-center justify-center rounded-full ${cell.dateStr === todayStr ? 'bg-brand-600 text-white' : 'text-slate-400'}`}>
                   {cell.d}
                 </div>
                 <div className="space-y-1">

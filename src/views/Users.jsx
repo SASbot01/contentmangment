@@ -36,7 +36,8 @@ export default function Users({ currentUser }) {
         ) : users.length === 0 ? (
           <EmptyState icon={UserIcon} title="Sin perfiles" hint="Aún no se ha registrado nadie." />
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[560px]">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wide text-slate-400 border-b border-slate-100 bg-slate-50/60">
                 <th className="py-3 px-4 font-semibold">Perfil</th>
@@ -58,7 +59,7 @@ export default function Users({ currentUser }) {
                   <td className="py-3 px-4 text-slate-500">@{u.username}</td>
                   <td className="py-3 px-4">
                     {u.role === 'admin'
-                      ? <Badge color="#7916ff"><Shield size={12} /> Admin</Badge>
+                      ? <Badge color="#2563eb"><Shield size={12} /> Admin</Badge>
                       : <Badge color="#64748b"><UserIcon size={12} /> Miembro</Badge>}
                   </td>
                   <td className="py-3 px-4 text-slate-500">{fmtDate(u.createdAt)}</td>
@@ -73,6 +74,7 @@ export default function Users({ currentUser }) {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>
